@@ -2,11 +2,25 @@ package com.tecdes.pedido.model.entity;
 
 public class Produto {
 
-    int idProduto;
-    String nome;
-    double preco;
+    private int idProduto;
+    private String nome;
+    private String descricao;
+    private double preco;
+    private String categoria;
 
     
+    public String getDescricao() {
+        return descricao;
+    }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+    public String getCategoria() {
+        return categoria;
+    }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
     public Produto(String nome, double preco) {
         this.nome = nome;
         this.preco = preco;
