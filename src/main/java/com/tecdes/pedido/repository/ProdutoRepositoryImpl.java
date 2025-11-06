@@ -93,7 +93,8 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
             stmt.setString(2, produto.getDescricao());
             stmt.setDouble(3, produto.getPreco());
             stmt.setString(4, produto.getCategoria());
-            stmt.setInt(5, produto.getIdProduto());    
+            stmt.setInt(5, produto.getIdProduto()); 
+            stmt.executeUpdate();   
             System.out.println("Produto ID " + produto.getIdProduto() + " atualizado.");
         } catch (SQLException e) {
             e.printStackTrace();
