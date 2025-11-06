@@ -1,6 +1,7 @@
 package com.tecdes.pedido.repository;
 
 import com.tecdes.pedido.config.ConnectionFactory;
+import com.tecdes.pedido.model.DAO.ProdutoDAO;
 import com.tecdes.pedido.model.entity.Produto;
 import java.sql.*;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
         }
         return produtos;
     }
-    
+
     // Método UPDATE
     @Override
     public void update(Produto produto) {
@@ -115,3 +116,4 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
         }
     }
 }
+
