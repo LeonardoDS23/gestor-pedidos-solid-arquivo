@@ -2,6 +2,7 @@ package com.tecdes.pedido.service;
 
 import java.util.List;
 
+import com.tecdes.pedido.model.entity.Cliente;
 import com.tecdes.pedido.model.entity.Pedido;
 import com.tecdes.pedido.repository.PedidoRepository;
 import com.tecdes.pedido.repository.PedidoRepositoryImpl;
@@ -32,7 +33,12 @@ public class PedidoService {
         repository.salvar(pedido);
     }
 
-    public List<Pedido> buscarTodos() {
+    public List<Cliente> buscarTodos() {
         return repository.buscarTodos();
+    }
+
+    public void salvarCliente(String nome, String fone) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'salvarCliente'");
     }
 }
