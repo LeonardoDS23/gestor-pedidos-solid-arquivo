@@ -17,6 +17,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 import com.tecdes.pedido.controller.ClienteController;
 import com.tecdes.pedido.model.entity.Cliente;
+import com.tecdes.pedido.model.entity.ItemPedido;
+
 
 public class ClienteView extends JFrame{
     
