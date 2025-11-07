@@ -1,7 +1,7 @@
 package com.tecdes.pedido.repository;
 
 import java.util.List;
-
+import com.tecdes.pedido.model.DAO.ClienteDAO;
 import com.tecdes.pedido.model.entity.Cliente;
 
 public class ClienteRepositorylmpl implements ClienteRepository {
@@ -11,14 +11,23 @@ public class ClienteRepositorylmpl implements ClienteRepository {
     @Override
     public void salvar(Cliente cliente) {
         clienteDAO.inserir(cliente);
-            }
+     }
         
-            private void inserir(Cliente cliente) {
-                
-            }
-        
-            @Override
+    @Override
     public List<Cliente> buscarTodos(){
         return clienteDAO.buscarTodos();
     }
+    @Override
+    public Cliente buscarPorId(int id){
+        return clienteDAO.buscarPorId(id);
+    }
+    @Override
+    public void atualizar(Cliente cliente){
+        clienteDAO.atualizar(cliente);
+    }
+    @Override
+    public void deletar (int id){
+        clienteDAO.deletar(id);
+    }   
+    
 }
