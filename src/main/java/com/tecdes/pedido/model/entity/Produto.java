@@ -10,9 +10,9 @@ public class Produto {
 
     //contrutor para repositoryImpl
     public  Produto(int idProduto, String nome ,  double preco, String categoria, String descricao) {
-            this.idProduto = idProduto;
-            this.nome = nome;
-            this.descricao = descricao;
+        this.idProduto = idProduto;
+        this.nome = nome;
+        this.descricao = descricao;
         this.preco = preco;
         this.categoria = categoria;
     }
