@@ -7,13 +7,32 @@ import com.tecdes.pedido.service.PedidoService;
 
 public class ClienteController {
     
-    private final PedidoService service = new PedidoService();
+    private final ClienteService service = new ClienteService();
 
+    // Salva
     public void salvar(String nome, String fone) {
         service.salvarCliente(nome, fone);
     }
 
-    public List<Cliente> listarTodos() {
-        return (List<Cliente>) service.buscarTodos();
+    // Busca todos
+    public List<Cliente> buscarTodos() {
+        return service.buscarTodos();
+    }
+
+     // Busca por Id
+     public Cliente findById(int idCliente){
+        return service.buscarPorId(idCliente);
+    }
+
+
+    // Atualiza
+    public void update(int idCliente, String nome, String fone){
+        service.atualizarCliente(idCliente, nome, fone);
+    }
+
+
+    // Deleta
+    public void delete(int idCliente){
+        service.deletarCliente(idCliente);
     }
 }

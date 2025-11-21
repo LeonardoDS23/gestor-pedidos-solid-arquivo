@@ -15,8 +15,8 @@ public class ProdutoController {
 
 
     // Salva
-    public void save(String nome, Double preco) {
-        service.salvarProduto(nome, preco);
+    public void save(int idProduto, String nome ,  double preco, String categoria, String descricao) {
+        service.salvarProduto(idProduto, nome, preco, categoria, descricao);
     }
 
 
@@ -27,20 +27,20 @@ public class ProdutoController {
 
 
      // Busca por Id
-     public Produto findById(int id){
+     public Produto findById(int idProduto){
         return service.buscarPorId(id);
     }
 
 
     // Atualiza
-    public void update(int id, String nome, Double preco){
-        service.atualizarProduto(id, nome, preco);
+    public void update(int idProduto, String nome ,  double preco, String categoria, String descricao){
+        service.atualizarProduto(idProduto, nome, preco, categoria, descricao);
     }
 
 
     // Deleta
-    public void delete(int id){
-        service.deletarProduto(id);
+    public void delete(int idProduto){
+        service.deletarProduto(idProduto);
     }
 }
 
