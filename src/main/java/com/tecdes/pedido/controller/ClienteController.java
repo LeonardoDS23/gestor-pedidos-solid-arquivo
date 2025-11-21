@@ -3,7 +3,8 @@ package com.tecdes.pedido.controller;
 import java.util.List;
 
 import com.tecdes.pedido.model.entity.Cliente;
-import com.tecdes.pedido.service.PedidoService;
+import com.tecdes.pedido.service.ClienteService;
+
 
 public class ClienteController {
     
