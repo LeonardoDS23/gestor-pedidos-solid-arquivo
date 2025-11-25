@@ -1,18 +1,12 @@
 package com.tecdes.pedido.repository;
 
 import com.tecdes.pedido.model.entity.Avaliacao;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-public class AvaliacaoRepository {
-
-    private List<Avaliacao> avaliacoes = new ArrayList<>();
-
-    public void salvar(Avaliacao avaliacao){
-        avaliacoes.add(avaliacao);
-    }
-
-    public List<Avaliacao> listar(){
-        return avaliacoes;
-    }
+public interface AvaliacaoRepository {
+    
+    Avaliacao save(Avaliacao avaliacao);
+    Optional<Avaliacao> findById(Long id);
+    // Adicionar busca por ID do Pedido, se necessário
+    Optional<Avaliacao> findByPedidoId(Long idPedido);
 }

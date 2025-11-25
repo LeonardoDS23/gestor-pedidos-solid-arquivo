@@ -11,16 +11,29 @@ public class AvaliacaoView {
         Scanner scanner = new Scanner(System.in);
         AvaliacaoController controller = new AvaliacaoController();
 
-        System.out.print("Nota (1 a 5): ");
-        int nota = scanner.nextInt();
+        try {
+            System.out.println("--- REGISTRAR AVALIAÇÃO ---");
+            
+            System.out.print("ID do Pedido a ser avaliado: ");
+            Long idPedido = scanner.nextLong(); 
+            scanner.nextLine(); 
 
-        scanner.nextLine();
-        System.out.print("Comentário: ");
-        String comentario = scanner.nextLine();
+            System.out.print("Nota (1 a 5): ");
+            int nota = scanner.nextInt();
+            scanner.nextLine(); 
 
-        Avaliacao avaliacao = new Avaliacao(1, nota, comentario);
-        controller.avaliarPedido(avaliacao);
+            System.out.print("Comentário: ");
+            String comentario = scanner.nextLine();
 
-        System.out.println("Avaliação registrada!");
+            Avaliacao avaliacao = new Avaliacao(idPedido, nota, comentario);
+            controller.avaliarPedido(avaliacao);
+
+            System.out.println("\nAvaliação registrada com sucesso!");
+            
+        } catch (java.util.InputMismatchException e) {
+            System.err.println("\nEntrada inválida. Certifique-se de digitar números para o ID e Nota.");
+        } catch (Exception e) {
+            System.err.println("\nOcorreu um erro: " + e.getMessage());
+        }
     }
 }
