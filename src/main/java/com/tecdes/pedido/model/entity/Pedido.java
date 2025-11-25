@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pedido {
-    private int id;
+    private int IdPedido;
     private LocalDateTime dataHora;
     private String status;
     private List<ItemPedido> produtos;
@@ -35,12 +35,12 @@ public class Pedido {
         this.valorTotal = total;
     }
 
-    public int getId() {
-        return id;
+    public int getIdPedido() {
+        return IdPedido;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int IdPedido) {
+        this.IdPedido = IdPedido;
     }
 
     public LocalDateTime getDataHora() {
