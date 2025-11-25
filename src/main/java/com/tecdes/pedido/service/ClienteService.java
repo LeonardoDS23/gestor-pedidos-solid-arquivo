@@ -3,12 +3,9 @@ package com.tecdes.pedido.service;
 import java.util.List;
 
 import com.tecdes.pedido.model.entity.Cliente;
-import com.tecdes.pedido.model.entity.Pedido;
-import com.tecdes.pedido.model.entity.Produto;
 import com.tecdes.pedido.repository.ClienteRepository;
 import com.tecdes.pedido.repository.ClienteRepositorylmpl;
-import com.tecdes.pedido.repository.PedidoRepository;
-import com.tecdes.pedido.repository.PedidoRepositoryImpl;
+
 
 public class ClienteService {
 
