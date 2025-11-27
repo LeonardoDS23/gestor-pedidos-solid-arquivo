@@ -2,17 +2,17 @@ package com.tecdes.pedido.model.entity;
 
 public class ItemPedido {
 
-    private int idItem;
+    private Long idItem;
     private Produto produto;
     private int quantidade;
     private double precoUnitario;
     private String observacoes;
 
-    public int getIdItem() {
+    public Long getIdItem() {
         return idItem;
     }
 
-    public void setIdItem(int idItem) {
+    public void setIdItem(Long idItem) {
         this.idItem = idItem;
     }
 
