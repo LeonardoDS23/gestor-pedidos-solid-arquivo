@@ -14,12 +14,14 @@ public class ProdutoDAO {
 
     // 🔹 INSERIR PRODUTO
     public void inserir(Produto produto) {
-        String sql = "INSERT INTO produto (nome, preco) VALUES (?, ?)";
+        String sql = "INSERT INTO produto (nome, preco, categoria, descricao) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, produto.getNome());
             stmt.setDouble(2, produto.getPreco());
+            stmt.setString(3, produto.getCategoria());
+            stmt.setString(4, produto.getDescricao());
             stmt.executeUpdate();
 
             System.out.println("Produto inserido com sucesso!");
@@ -30,7 +32,7 @@ public class ProdutoDAO {
 
     // 🔹 BUSCAR TODOS
     public List<Produto> buscarTodos() {
-        String sql = "SELECT id_produto, nome, preco FROM produto";
+        String sql = "SELECT id_produto, nome, preco, categoria, descricao FROM produto";
         List<Produto> produtos = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -39,9 +41,11 @@ public class ProdutoDAO {
 
             while (rs.next()) {
                 Produto p = new Produto();
-                p.setIdProduto(rs.getInt("id_produto"));
+                p.setIdProduto(rs.getLong("id_produto")); // Mudou para getLong
                 p.setNome(rs.getString("nome"));
                 p.setPreco(rs.getDouble("preco"));
+                p.setCategoria(rs.getString("categoria"));
+                p.setDescricao(rs.getString("descricao"));
                 produtos.add(p);
             }
 
@@ -53,20 +57,22 @@ public class ProdutoDAO {
     }
 
     // 🔹 BUSCAR POR ID
-    public Produto buscarPorId(int id) {
-        String sql = "SELECT id_produto, nome, preco FROM produto WHERE id_produto = ?";
+    public Produto buscarPorId(Long id) {
+        String sql = "SELECT id_produto, nome, preco, categoria, descricao FROM produto WHERE id_produto = ?";
         Produto produto = null;
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     produto = new Produto();
-                    produto.setIdProduto(rs.getInt("id_produto"));
+                    produto.setIdProduto(rs.getLong("id_produto")); // Mudou para getLong
                     produto.setNome(rs.getString("nome"));
                     produto.setPreco(rs.getDouble("preco"));
+                    produto.setCategoria(rs.getString("categoria"));
+                    produto.setDescricao(rs.getString("descricao"));
                 }
             }
 
@@ -79,15 +85,17 @@ public class ProdutoDAO {
 
     // 🔹 ATUALIZAR
     public void atualizar(Produto produto) {
-        String sql = "UPDATE produto SET nome = ?, preco = ? WHERE id_produto = ?";
+        String sql = "UPDATE produto SET nome = ?, preco = ?, categoria = ?, descricao = ? WHERE id_produto = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, produto.getNome());
-            stmt.setDouble(2, produto.getPreco());
-            stmt.setInt(3, produto.getIdProduto());
-            stmt.executeUpdate();
+                stmt.setString(1, produto.getNome());
+                stmt.setDouble(2, produto.getPreco());
+                stmt.setString(3, produto.getCategoria());
+                stmt.setString(4, produto.getDescricao());
+                stmt.setLong(5, produto.getIdProduto()); // Mudou para setLong
+                stmt.executeUpdate();
 
             System.out.println("Produto atualizado com sucesso!");
         } catch (SQLException e) {
@@ -96,13 +104,13 @@ public class ProdutoDAO {
     }
 
     // 🔹 DELETAR
-    public void deletar(int id) {
+    public void deletar(Long id) {
         String sql = "DELETE FROM produto WHERE id_produto = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             stmt.executeUpdate();
 
             System.out.println("Produto deletado com sucesso!");
