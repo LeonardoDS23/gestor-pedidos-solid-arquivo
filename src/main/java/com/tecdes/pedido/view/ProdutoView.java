@@ -180,7 +180,7 @@ public class ProdutoView extends JFrame {
     private void buscarProduto() {
         try {
             Long id = Long.parseLong(txtId.getText());
-            Produto p = service.buscarProdutoPorId(id);
+            Produto p = service.buscarPorId(id);
 
             txtNome.setText(p.getNome());
             txtPreco.setText(String.valueOf(p.getPreco()));

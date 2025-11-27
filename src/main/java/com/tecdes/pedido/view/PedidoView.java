@@ -134,7 +134,7 @@ public class PedidoView extends JFrame {
             Long idProduto = Long.parseLong(idProdutoStr);
             int qtd = Integer.parseInt(qtdStr);
 
-            Produto produto = produtoService.buscarProdutoPorId(idProduto);
+            Produto produto = produtoService.buscarPorId(idProduto);
 
             modeloTabela.addRow(new Object[]{
                     produto.getIdProduto(),
