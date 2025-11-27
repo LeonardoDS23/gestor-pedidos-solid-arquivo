@@ -27,7 +27,7 @@ public class ProdutoController {
 
 
     public Produto findById(Long idProduto){
-        return service.buscarProdutoPorId(idProduto);
+        return service.buscarPorId(idProduto);
     }
 
 
