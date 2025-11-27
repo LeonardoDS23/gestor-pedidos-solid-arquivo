@@ -37,7 +37,7 @@ public class PedidoService {
             
             Long idProduto = produtoItem.getIdProduto();
 
-            Produto produto = produtoService.buscarProdutoPorId(idProduto);
+            Produto produto = produtoService.buscarPorId(idProduto);
 
             if (item.getQuantidade() <= 0) {
                 throw new IllegalArgumentException("Quantidade inválida para o item: " + produto.getNome());
@@ -47,7 +47,6 @@ public class PedidoService {
 
             total += item.getPrecoUnitario() * item.getQuantidade();
 
-            item.setIdItem(novoPedido);
         }
 
         novoPedido.setValorTotal(total);
