@@ -8,10 +8,10 @@ import java.util.Scanner;
 public class AvaliacaoView {
 
     public void menu() {
-        Scanner scanner = new Scanner(System.in);
-        AvaliacaoController controller = new AvaliacaoController();
 
-        try {
+        try (Scanner scanner = new Scanner(System.in)) {
+            AvaliacaoController controller = new AvaliacaoController();
+
             System.out.println("--- REGISTRAR AVALIAÇÃO ---");
             
             System.out.print("ID do Pedido a ser avaliado: ");

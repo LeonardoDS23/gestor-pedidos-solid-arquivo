@@ -8,6 +8,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.tecdes.pedido.model.entity.Produto;
 import com.tecdes.pedido.service.ProdutoService;
+import com.tecdes.pedido.repository.ProdutoRepository;
+import com.tecdes.pedido.repository.ProdutoRepositoryImpl;
 
 public class ProdutoView extends JFrame {
 
@@ -16,9 +18,13 @@ public class ProdutoView extends JFrame {
     private JTable tabela;
     private DefaultTableModel modeloTabela;
 
-    private final ProdutoService service = new ProdutoService();
+    private final ProdutoService service;
 
     public ProdutoView() {
+
+        ProdutoRepository repository = new ProdutoRepositoryImpl();
+        this.service = new ProdutoService(repository);
+        
         setTitle("Cadastro de Produtos");
         setSize(800, 500);
         setLocationRelativeTo(null);

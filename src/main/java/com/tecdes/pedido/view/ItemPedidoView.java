@@ -70,24 +70,41 @@ public class ItemPedidoView extends JFrame {
         btnSalvar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ItemPedido item = new ItemPedido();
-                item.setIdItem(Integer.parseInt(txtId.getText()));
+                try {
+                    ItemPedido item = new ItemPedido();
+                    
+                    // ✅ CORREÇÃO: Não setar ID (é gerado automaticamente)
+                    Produto prod = new Produto();
+                    prod.setIdProduto(Long.parseLong(txtProdutoId.getText()));
+                    item.setProduto(prod);
 
-                Produto prod = new Produto();
-                prod.setIdProduto(Integer.parseInt(txtProdutoId.getText()));
-                item.setProduto(prod);
+                    item.setQuantidade(Integer.parseInt(txtQtd.getText()));
+                    item.setPrecoUnitario(Double.parseDouble(txtPreco.getText()));
+                    item.setObservacoes(txtObs.getText());
 
-                item.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                item.setPrecoUnitario(Double.parseDouble(txtPreco.getText()));
-                item.setObservacoes(txtObs.getText());
+                    controller.salvar(item);
 
-                controller.salvar(item);
-
-                JOptionPane.showMessageDialog(null, "Item salvo com sucesso!");
+                    JOptionPane.showMessageDialog(null, "Item salvo com sucesso!");
+                    
+                    // Limpar campos após salvar
+                    limparCampos();
+                    
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Erro: Verifique os valores numéricos!");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex.getMessage());
+                }
             }
         });
 
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Melhor que EXIT_ON_CLOSE
+    }
+    
+    private void limparCampos() {
+        txtProdutoId.setText("");
+        txtQtd.setText("");
+        txtPreco.setText("");
+        txtObs.setText("");
     }
 }
