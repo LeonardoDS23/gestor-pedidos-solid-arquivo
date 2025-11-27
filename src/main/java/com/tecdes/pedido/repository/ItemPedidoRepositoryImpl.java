@@ -32,7 +32,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
     }
 
     @Override
-    public ItemPedido findById(int id) {
+    public ItemPedido findById(Long id) {
         try {
             return itemPedidoDAO.buscarPorId(id);
         } catch (SQLException e) {
@@ -61,7 +61,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         try {
             itemPedidoDAO.deletar(id);
         } catch (SQLException e) {

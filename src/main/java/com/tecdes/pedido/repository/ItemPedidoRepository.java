@@ -7,11 +7,11 @@ public interface ItemPedidoRepository {
 
     void save(ItemPedido item);
 
-    ItemPedido findById(int id);
+    ItemPedido findById(Long id);
 
     List<ItemPedido> findAll();
 
     void update(ItemPedido item);
 
-    void delete(int id);
+    void delete(Long id);
 }

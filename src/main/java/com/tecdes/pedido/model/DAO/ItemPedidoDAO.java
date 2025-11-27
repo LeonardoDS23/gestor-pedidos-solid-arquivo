@@ -38,7 +38,7 @@ public class ItemPedidoDAO {
             ItemPedido item = new ItemPedido();
             Produto p = new Produto();
 
-            item.setIdItem(rs.getInt("id"));
+            item.setIdItem(rs.getLong("id"));
             p.setIdProduto(rs.getLong("id_produto"));
             item.setProduto(p);
 
@@ -51,11 +51,11 @@ public class ItemPedidoDAO {
         return lista;
     }
 
-    public ItemPedido buscarPorId(int id) throws SQLException {
+    public ItemPedido buscarPorId(Long id) throws SQLException {
         String sql = "SELECT * FROM item_pedido WHERE id = ?";
 
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+        ps.setLong(1, id);
 
         ResultSet rs = ps.executeQuery();
 
@@ -63,7 +63,7 @@ public class ItemPedidoDAO {
             ItemPedido item = new ItemPedido();
             Produto p = new Produto();
 
-            item.setIdItem(rs.getInt("id"));
+            item.setIdItem(rs.getLong("id"));
             p.setIdProduto(rs.getLong("id_produto"));
             item.setProduto(p);
 
@@ -90,11 +90,11 @@ public class ItemPedidoDAO {
         ps.executeUpdate();
     }
 
-    public void deletar(int id) throws SQLException {
+    public void deletar(Long id) throws SQLException {
         String sql = "DELETE FROM item_pedido WHERE id=?";
 
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+        ps.setLong(1, id);
         ps.executeUpdate();
     }
 }
