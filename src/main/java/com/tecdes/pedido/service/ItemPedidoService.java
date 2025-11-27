@@ -17,7 +17,7 @@ public class ItemPedidoService {
         repository.save(item);
     }
 
-    public ItemPedido buscarPorId(int id) {
+    public ItemPedido buscarPorId(Long id) {
         return repository.findById(id);
     }
 
@@ -29,7 +29,7 @@ public class ItemPedidoService {
         repository.update(item);
     }
 
-    public void deletar(int id) {
+    public void deletar(Long id) {
         repository.delete(id);
     }
 }

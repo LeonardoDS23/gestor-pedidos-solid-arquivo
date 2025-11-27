@@ -13,7 +13,7 @@ public class ItemPedidoController {
         service.salvar(item);
     }
 
-    public ItemPedido buscar(int id) {
+    public ItemPedido buscar(Long id) {
         return service.buscarPorId(id);
     }
 
@@ -25,7 +25,7 @@ public class ItemPedidoController {
         service.atualizar(item);
     }
 
-    public void deletar(int id) {
+    public void deletar(Long id) {
         service.deletar(id);
     }
 }
