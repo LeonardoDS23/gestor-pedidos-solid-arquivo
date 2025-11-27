@@ -30,7 +30,11 @@ public class ProdutoService {
     public Produto salvarProduto(String nome, double preco, String categoria, String descricao) {
         validarDados(nome, preco);
         
-        Produto produto = new Produto(nome, preco, categoria, descricao);
+        Produto produto = new Produto();
+        produto.setNome(nome);
+        produto.setPreco(preco);
+        produto.setCategoria(categoria);
+        produto.setDescricao(descricao);
         
         return repository.save(produto);
     }
@@ -38,13 +42,12 @@ public class ProdutoService {
     /**
      * Busca um produto pelo seu identificador.
      */
-    public Produto buscarProdutoPorId(Long idProduto) {
+    public Produto buscarPorId(Long idProduto) {
         if (idProduto == null || idProduto <= 0) {
             throw new IllegalArgumentException("ID do produto inválido.");
         }
         
         Optional<Produto> produto = repository.findById(idProduto);
-        
         return produto.orElseThrow(() -> new RuntimeException("Produto ID " + idProduto + " não encontrado."));
     }
 
@@ -65,7 +68,7 @@ public class ProdutoService {
         validarDados(nome, preco);
         
         // 1. Busca a entidade existente
-        Produto produtoExistente = buscarProdutoPorId(idProduto);
+        Produto produtoExistente = buscarPorId(idProduto);
         
         // 2. Atualiza os campos
         produtoExistente.setNome(nome);
@@ -85,8 +88,11 @@ public class ProdutoService {
             throw new IllegalArgumentException("ID do produto inválido para exclusão.");
         }
         
-        // Opcional: Verificar se o produto está em algum pedido antes de deletar
-        
+    
+         // Verifica se o produto existe antes de deletar
+        if (!repository.findById(idProduto).isPresent()) {
+        throw new RuntimeException("Produto ID " + idProduto + " não encontrado para exclusão.");
+        }
         // Deleta o produto
         repository.delete(idProduto);
     }
