@@ -56,7 +56,7 @@ public class AtendenteController {
     // --- FUNCIONALIDADES DE OPERAÇÃO ---
     
     public Produto buscarProdutoPorId(Long idProduto) {
-        return produtoService.buscarProdutoPorId(idProduto);
+        return produtoService.buscarPorId(idProduto);
     }
 
     public Pedido iniciarNovaVenda(Pedido pedido) {
