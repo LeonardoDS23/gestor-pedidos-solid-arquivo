@@ -9,8 +9,6 @@ import com.tecdes.pedido.service.ProdutoService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class PedidoView extends JFrame {

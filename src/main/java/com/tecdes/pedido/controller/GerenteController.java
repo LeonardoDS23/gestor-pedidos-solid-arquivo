@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.tecdes.pedido.model.entity.Atendente;
 import com.tecdes.pedido.model.entity.Gerente;
-import com.tecdes.pedido.model.entity.Usuario;
 import com.tecdes.pedido.service.AtendenteService;
 import com.tecdes.pedido.service.GerenteService;
 import com.tecdes.pedido.repository.UsuarioRepositoryImpl;

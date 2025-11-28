@@ -1,7 +1,4 @@
 package com.tecdes.pedido.view;
-
-import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,7 +21,7 @@ public class ProdutoView extends JFrame {
 
         ProdutoRepository repository = new ProdutoRepositoryImpl();
         this.service = new ProdutoService(repository);
-        
+
         setTitle("Cadastro de Produtos");
         setSize(800, 500);
         setLocationRelativeTo(null);
