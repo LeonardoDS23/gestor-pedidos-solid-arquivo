@@ -10,10 +10,10 @@ public class TesteProdutoTxt {
 
         Produto p = new Produto(
             1L,
-            "Mouse Gamer",
-            129.90,
-            "Periféricos",
-            "Iluminação RGB"
+            "Coca-Cola",
+            6.90,
+            "Bebida",
+            "Refrigerante"
         );
 
         dao.salvar(p);
