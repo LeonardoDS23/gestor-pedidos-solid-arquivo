@@ -320,6 +320,7 @@ public class Main {
             }
         } catch (Exception e) {
             System.err.println("Erro: " + e.getMessage());
+            e.printStackTrace();
             scanner.nextLine();
         }
     }
