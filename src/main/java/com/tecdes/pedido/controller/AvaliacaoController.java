@@ -1,18 +1,22 @@
 package com.tecdes.pedido.controller;
 
+
 import com.tecdes.pedido.model.entity.Avaliacao;
 import com.tecdes.pedido.service.AvaliacaoService;
 import com.tecdes.pedido.repository.AvaliacaoRepositoryImpl;
 
+
 public class AvaliacaoController {
-    
+   
     private final AvaliacaoService avaliacaoService;
+
 
     public AvaliacaoController() {
         // Inicialização manual das dependências
         AvaliacaoRepositoryImpl repository = new AvaliacaoRepositoryImpl();
         this.avaliacaoService = new AvaliacaoService(repository);
     }
+
 
     public void avaliarPedido(Avaliacao avaliacao) {
         try {
@@ -23,6 +27,7 @@ public class AvaliacaoController {
             System.err.println("Erro ao registrar: " + e.getMessage());
         }
     }
+
 
     public Avaliacao buscar(Long id) {
         try {
