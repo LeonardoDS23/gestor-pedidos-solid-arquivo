@@ -26,6 +26,8 @@ public class ProdutoView extends JFrame {
         
         // Carregar produtos automaticamente ao abrir
         listarTodos();
+        setVisible(true);
+
     }
 
     private void inicializarComponentes() {
