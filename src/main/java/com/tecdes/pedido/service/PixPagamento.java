@@ -1,6 +1,8 @@
 package com.tecdes.pedido.service;
 
+
 public class PixPagamento implements PagamentoStrategy {
+
 
     @Override
     public boolean pagar(double valor) {
@@ -8,3 +10,5 @@ public class PixPagamento implements PagamentoStrategy {
         return true;
     }
 }
+
+
