@@ -1,15 +1,20 @@
 package com.tecdes.pedido.view;
 
+
 import com.tecdes.pedido.controller.GerenteController;
 import com.tecdes.pedido.model.entity.Atendente;
+
 
 import java.util.List;
 import java.util.Scanner;
 
+
 public class GerenteView {
+
 
     private final GerenteController controller = new GerenteController();
     private final Scanner scanner = new Scanner(System.in);
+
 
     public void menuPrincipal() {
         int opcao;
@@ -22,10 +27,11 @@ public class GerenteView {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
+
             try {
                 opcao = scanner.nextInt();
                 scanner.nextLine();
-                
+               
                 switch (opcao) {
                     case 1: cadastrarAtendente(); break;
                     case 2: listarAtendentes(); break;
@@ -45,13 +51,14 @@ public class GerenteView {
         } while (opcao != 0);
     }
 
+
     private void cadastrarAtendente() {
         System.out.println("\n--- CADASTRAR NOVO ATENDENTE ---");
         System.out.print("Login: ");
         String login = scanner.nextLine();
         System.out.print("Senha: ");
         String senha = scanner.nextLine();
-        
+       
         try {
             controller.cadastrarNovoAtendente(login, senha);
             System.out.println("Atendente cadastrado com sucesso!");
@@ -59,7 +66,7 @@ public class GerenteView {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
-    
+   
     private void listarAtendentes() {
         System.out.println("\n--- LISTA DE ATENDENTES ---");
         List<Atendente> atendentes = controller.listarTodosAtendentes();
@@ -72,7 +79,7 @@ public class GerenteView {
         }
         System.out.println("---------------------------");
     }
-    
+   
     private void redefinirSenha() {
         System.out.println("\n--- REDEFINIR SENHA ---");
         System.out.print("ID do Usuário para redefinir: ");
@@ -81,11 +88,11 @@ public class GerenteView {
             scanner.nextLine();
             System.out.print("Nova Senha: ");
             String novaSenha = scanner.nextLine();
-            
+           
             controller.redefinirSenhaDeUsuario(id, novaSenha);
             System.out.println("Senha redefinida com sucesso para o usuário ID " + id + ".");
-            
-        } catch (java.util.InputMismatchException e) { // Captura o erro específico de tipo
+           
+        } catch (java.util.InputMismatchException e) {
             System.err.println("ERRO: ID deve ser um número.");
             scanner.nextLine();
         } catch (RuntimeException e) {
@@ -93,17 +100,18 @@ public class GerenteView {
         }
     }
 
+
     private void excluirUsuario() {
         System.out.println("\n--- EXCLUIR USUÁRIO ---");
         System.out.print("ID do Usuário para exclusão: ");
         try {
             Long id = scanner.nextLong();
             scanner.nextLine();
-            
+           
             controller.excluirUsuario(id);
             System.out.println("Usuário ID " + id + " excluído com sucesso.");
-            
-        } catch (java.util.InputMismatchException e) { // Captura o erro específico de tipo
+           
+        } catch (java.util.InputMismatchException e) {
             System.err.println("ERRO: ID deve ser um número.");
             scanner.nextLine();
         } catch (RuntimeException e) {
@@ -111,3 +119,4 @@ public class GerenteView {
         }
     }
 }
+
