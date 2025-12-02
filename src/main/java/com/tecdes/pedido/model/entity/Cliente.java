@@ -5,14 +5,16 @@ public class Cliente {
     private Long idCliente; 
     private String nome;
     private String fone;
+    private String email;
 
     public Cliente() {
     
     }
 
-    public Cliente(String nome, String fone) {
-        setNome(nome);
-        setFone(fone);
+    public Cliente(String nome, String fone, String email) {
+        this.nome = nome;
+        this.fone = fone;
+        this.email = email;
     }
 
 
@@ -48,8 +50,15 @@ public class Cliente {
         }
     }
 
-    
-    
+    public String getEmail()
+    {   return email;    
+    }
+    public void setEmail(String email) 
+    { 
+        this.email = email; 
+    }
+
+
     @Override
     public String toString() {
         return nome + " (" + fone + ")";

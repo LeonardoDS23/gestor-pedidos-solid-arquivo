@@ -19,7 +19,6 @@ public class PedidoService {
     }
 
     public Pedido finalizarPedido(Pedido novoPedido) {
-
         if (novoPedido.getProdutos() == null || novoPedido.getProdutos().isEmpty()) {
             throw new IllegalArgumentException("O pedido deve conter pelo menos um item.");
         }
@@ -27,16 +26,13 @@ public class PedidoService {
         double total = 0.0;
 
         for (ItemPedido item : novoPedido.getProdutos()) {
-
             Produto produtoItem = item.getProduto();
 
             if (produtoItem == null || produtoItem.getIdProduto() <= 0) {
                 throw new IllegalArgumentException("Produto inválido em um dos itens.");
             }
-
             
             Long idProduto = produtoItem.getIdProduto();
-
             Produto produto = produtoService.buscarPorId(idProduto);
 
             if (item.getQuantidade() <= 0) {
@@ -44,9 +40,7 @@ public class PedidoService {
             }
 
             item.setPrecoUnitario(produto.getPreco());
-
             total += item.getPrecoUnitario() * item.getQuantidade();
-
         }
 
         novoPedido.setValorTotal(total);
@@ -64,6 +58,11 @@ public class PedidoService {
     public List<Pedido> buscarTodosPedidos() {
         return pedidoRepository.findAll();
     }
+    
+    // ✅ ADICIONE ESTE MÉTODO:
+    public List<Pedido> buscarTodos() {
+        return buscarTodosPedidos(); // Delega ao método existente
+    }
 
     public Pedido atualizarStatus(Long id, String novoStatus) {
         Pedido pedidoExistente = buscarPedidoPorId(id);
@@ -79,7 +78,6 @@ public class PedidoService {
         }
 
         pedidoExistente.setStatus("Cancelado");
-
         return pedidoRepository.save(pedidoExistente);
     }
 }

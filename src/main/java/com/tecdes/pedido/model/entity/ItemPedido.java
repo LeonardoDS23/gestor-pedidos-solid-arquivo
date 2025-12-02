@@ -7,6 +7,15 @@ public class ItemPedido {
     private int quantidade;
     private double precoUnitario;
     private String observacoes;
+    private Long idPedido;
+
+    public Long getIdPedido() {
+        return idPedido;
+    }
+
+    public void setIdPedido(Long idPedido) {
+        this.idPedido = idPedido;
+    }
 
     public Long getIdItem() {
         return idItem;

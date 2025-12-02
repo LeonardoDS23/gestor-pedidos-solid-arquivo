@@ -1,16 +1,38 @@
 package com.tecdes.pedido.model.entity;
 
+import java.util.Date;
 
 public class Atendente extends Usuario {
 
     private Long idFuncionario;
+    private Date dataCadastro; // ✅ Adicionar campo para data de cadastro
 
     public Atendente() {
         super();
+        this.dataCadastro = new Date(); // Data atual automaticamente
     }
     
     public Atendente(String login, String senha) {
         super(login, senha);
+        this.dataCadastro = new Date(); // Data atual automaticamente
+    }
+    
+    // ✅ GETTER para dataCadastro
+    public Date getDataCadastro() {
+        return dataCadastro;
+    }
+    
+    // ✅ SETTER para dataCadastro
+    public void setDataCadastro(Date dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+    
+    // ✅ Método para formatar a data (opcional, mas útil)
+    public String getDataCadastroFormatada() {
+        if (dataCadastro != null) {
+            return new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(dataCadastro);
+        }
+        return "Não informada";
     }
     
     public Produto buscarProduto(Long idProduto) {

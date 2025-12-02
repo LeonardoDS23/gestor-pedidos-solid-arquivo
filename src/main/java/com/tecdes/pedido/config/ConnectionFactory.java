@@ -23,38 +23,73 @@ public class ConnectionFactory {
     /**
      * Bloco estático executado apenas uma vez quando a classe é carregada.
      * Aqui ocorre o carregamento do arquivo de configuração do banco
-     * (db.properties)
-     * e o registro do driver JDBC.
+     * (db.properties) e o registro do driver JDBC.
      */
     static {
-        try (
-                // Obtém o arquivo db.properties do diretório de recursos (src/main/resources)
-                InputStream input = ConnectionFactory.class
-                        .getClassLoader()
-                        .getResourceAsStream("db.properties")) {
-            if (input == null) {
-                // Caso o arquivo não seja encontrado, mostra uma mensagem de erro
-                System.err.println("Erro: Arquivo 'db.properties' não encontrado.");
-                // Poderia ser lançada uma exceção RuntimeException aqui, se desejado
-            }
-
-            // Carrega as propriedades do arquivo (url, usuário, senha, driver)
-            PROPERTIES.load(input);
-
-            // Carrega dinamicamente o driver JDBC definido no arquivo de propriedades
-            // Exemplo: com.mysql.cj.jdbc.Driver
-            Class.forName(PROPERTIES.getProperty("db.driver"));
-
-        } catch (IOException e) {
-            // Captura erros ao ler o arquivo db.properties
-            System.err.println("Erro ao carregar o arquivo de propriedades: " + e.getMessage());
-            throw new RuntimeException("Falha ao configurar a conexão.", e);
-
-        } catch (ClassNotFoundException e) {
-            // Captura erro se o driver JDBC não for encontrado no classpath
-            System.err.println("Erro: Driver JDBC não encontrado: " + e.getMessage());
-            throw new RuntimeException("Driver MySQL não encontrado.", e);
+        try {
+            // Tenta carregar o arquivo de configuração
+            loadConfiguration();
+            
+            // Carrega o driver JDBC
+            loadDriver();
+            
+            System.out.println("✅ ConnectionFactory configurada com sucesso");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erro crítico ao configurar ConnectionFactory");
+            throw new RuntimeException("Falha na configuração do banco de dados", e);
         }
+    }
+
+    /**
+     * Carrega as configurações do banco de dados
+     */
+    private static void loadConfiguration() {
+        try (InputStream input = ConnectionFactory.class
+                .getClassLoader()
+                .getResourceAsStream("db.properties")) {
+            
+            if (input != null) {
+                PROPERTIES.load(input);
+                System.out.println("📁 Configurações carregadas de db.properties");
+            } else {
+                // Arquivo não encontrado, usa configurações padrão
+                System.out.println("⚠️  Arquivo db.properties não encontrado. Usando configurações padrão.");
+                setDefaultProperties();
+            }
+            
+        } catch (IOException e) {
+            System.err.println("⚠️  Erro ao ler db.properties: " + e.getMessage());
+            System.out.println("🔄 Usando configurações padrão...");
+            setDefaultProperties();
+        }
+    }
+
+    /**
+     * Define as configurações padrão para desenvolvimento
+     */
+    private static void setDefaultProperties() {
+        // Configurações padrão para MySQL
+        PROPERTIES.setProperty("db.url", "jdbc:mysql://localhost:3306/gestor_pedidos");
+        PROPERTIES.setProperty("db.user", "root");
+        PROPERTIES.setProperty("db.password", "");
+        PROPERTIES.setProperty("db.driver", "com.mysql.cj.jdbc.Driver");
+        
+        System.out.println("🔧 Configurações padrão definidas para MySQL");
+    }
+
+    /**
+     * Carrega o driver JDBC
+     */
+    private static void loadDriver() throws ClassNotFoundException {
+        String driver = PROPERTIES.getProperty("db.driver");
+        
+        if (driver == null || driver.trim().isEmpty()) {
+            throw new ClassNotFoundException("Driver não especificado nas configurações");
+        }
+        
+        Class.forName(driver);
+        System.out.println("🚀 Driver carregado: " + driver);
     }
 
     /**
@@ -71,8 +106,39 @@ public class ConnectionFactory {
         String user = PROPERTIES.getProperty("db.user");
         String password = PROPERTIES.getProperty("db.password");
 
+        // Valida as configurações
+        if (url == null || user == null || password == null) {
+            throw new SQLException("Configurações de conexão incompletas");
+        }
+
+        System.out.println("🔗 Conectando ao banco: " + url);
+        
         // Cria e retorna a conexão usando o DriverManager
         return DriverManager.getConnection(url, user, password);
+    }
+
+    /**
+     * Método sobrecarregado para obter conexão com timeout personalizado
+     */
+    public static Connection getConnection(int timeoutSeconds) throws SQLException {
+        Connection conn = getConnection();
+        conn.setNetworkTimeout(
+            java.util.concurrent.Executors.newFixedThreadPool(1),
+            timeoutSeconds * 1000
+        );
+        return conn;
+    }
+
+    /**
+     * Testa a conexão com o banco de dados
+     */
+    public static boolean testConnection() {
+        try (Connection conn = getConnection()) {
+            return conn.isValid(2); // Testa com timeout de 2 segundos
+        } catch (SQLException e) {
+            System.err.println("❌ Falha no teste de conexão: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -86,10 +152,45 @@ public class ConnectionFactory {
     public static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
-                conn.close(); // Libera os recursos da conexão
+                if (!conn.isClosed()) {
+                    conn.close();
+                    System.out.println("🔌 Conexão fechada com sucesso");
+                }
             } catch (SQLException e) {
-                System.err.println("Erro ao fechar a conexão: " + e.getMessage());
+                System.err.println("⚠️  Erro ao fechar a conexão: " + e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Fecha outros recursos do banco de dados
+     */
+    public static void closeResources(AutoCloseable... resources) {
+        for (AutoCloseable resource : resources) {
+            if (resource != null) {
+                try {
+                    resource.close();
+                } catch (Exception e) {
+                    System.err.println("⚠️  Erro ao fechar recurso: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * Método main para testes rápidos
+     */
+    public static void main(String[] args) {
+        System.out.println("\n=== TESTE DE CONEXÃO ===");
+        
+        if (testConnection()) {
+            System.out.println("✅ Conexão com banco de dados estabelecida com sucesso!");
+        } else {
+            System.err.println("❌ Falha ao conectar ao banco de dados");
+            System.err.println("Verifique:");
+            System.err.println("1. Se o banco de dados está rodando");
+            System.err.println("2. As configurações em db.properties");
+            System.err.println("3. As dependências no pom.xml");
         }
     }
 }

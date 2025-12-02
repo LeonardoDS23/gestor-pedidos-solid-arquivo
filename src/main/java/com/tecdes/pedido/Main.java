@@ -11,14 +11,15 @@ public class Main {
     
     private static PedidoService pedidoService;
     private static ProdutoService produtoService;
+    private static ClienteService clienteService;
+    private static ItemPedidoService itemPedidoService;
+    private static AvaliacaoService avaliacaoService;
     private static Scanner scanner;
+    private static JFrame menuFrame;
 
     public static void main(String[] args) {
-        // Inicializar serviços
         inicializarServicos();
         scanner = new Scanner(System.in);
-        
-        // Escolher entre Interface Gráfica ou Console
         escolherModoInterface();
     }
     
@@ -30,9 +31,24 @@ public class Main {
             PedidoRepository pedidoRepo = new PedidoRepositoryImpl();
             pedidoService = new PedidoService(pedidoRepo, produtoService);
             
+            ClienteRepository clienteRepo = new ClienteRepositoryImpl();
+            clienteService = new ClienteService(clienteRepo);
+            
+            
+            itemPedidoService = new ItemPedidoService(); 
+            
+            try {
+                AvaliacaoRepository avaliacaoRepo = new AvaliacaoRepositoryImpl();
+                avaliacaoService = new AvaliacaoService(avaliacaoRepo);
+            } catch (Exception e) {
+                System.out.println("⚠️  AvaliacaoService não disponível: " + e.getMessage());
+                avaliacaoService = null;
+            }
+            
             System.out.println("✅ Serviços inicializados com sucesso!");
         } catch (Exception e) {
             System.err.println("❌ Erro ao inicializar serviços: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -56,6 +72,7 @@ public class Main {
                     break;
                 case 3:
                     System.out.println("Saindo...");
+                    fecharRecursos();
                     System.exit(0);
                     break;
                 default:
@@ -74,14 +91,13 @@ public class Main {
     // =============================================
     private static void iniciarInterfaceGrafica() {
         SwingUtilities.invokeLater(() -> {
-            // Criar menu principal gráfico
             criarMenuPrincipalGrafico();
         });
     }
     
     private static void criarMenuPrincipalGrafico() {
-        JFrame menuFrame = new JFrame("Sistema Gestor de Pedidos");
-        menuFrame.setSize(400, 500);
+        menuFrame = new JFrame("Sistema Gestor de Pedidos");
+        menuFrame.setSize(400, 550);
         menuFrame.setLocationRelativeTo(null);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setLayout(null);
@@ -91,50 +107,120 @@ public class Main {
         titulo.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
         menuFrame.add(titulo);
         
-        // Botões para diferentes funcionalidades
+        int yPos = 80;
+        int buttonHeight = 40;
+        int buttonWidth = 300;
+        int xPos = 50;
+        int spacing = 50;
+        
+        // 1. Botão Atendente (Console)
+        JButton btnAtendente = new JButton("👨‍💼 Menu Atendente (Console)");
+        btnAtendente.setBounds(xPos, yPos, buttonWidth, buttonHeight);
+        btnAtendente.addActionListener(e -> {
+            menuFrame.setVisible(false);
+            new AtendenteView().menuPrincipal(); // ✅ Esta View é console
+            menuFrame.setVisible(true);
+        });
+        menuFrame.add(btnAtendente);
+        yPos += spacing;
+        
+        // 2. Botão Pedidos (Swing)
         JButton btnPedidos = new JButton("📋 Gerenciar Pedidos");
-        btnPedidos.setBounds(50, 80, 300, 40);
+        btnPedidos.setBounds(xPos, yPos, buttonWidth, buttonHeight);
         btnPedidos.addActionListener(e -> {
-            menuFrame.dispose();
-            new PedidoView(pedidoService, produtoService);
+            menuFrame.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+                new PedidoView(pedidoService, produtoService);
+                menuFrame.setVisible(true);
+            });
         });
         menuFrame.add(btnPedidos);
+        yPos += spacing;
         
+        // 3. Botão Produtos (Swing)
         JButton btnProdutos = new JButton("📦 Gerenciar Produtos");
-        btnProdutos.setBounds(50, 140, 300, 40);
+        btnProdutos.setBounds(xPos, yPos, buttonWidth, buttonHeight);
         btnProdutos.addActionListener(e -> {
-            menuFrame.dispose();
-            new ProdutoView();
+            menuFrame.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+                new ProdutoView(produtoService);
+                menuFrame.setVisible(true);
+            });
         });
         menuFrame.add(btnProdutos);
+        yPos += spacing;
         
-        JButton btnItemPedido = new JButton("🛒 Cadastrar Item Pedido");
-        btnItemPedido.setBounds(50, 200, 300, 40);
+        // 4. Botão Item Pedido (Swing)
+        JButton btnItemPedido = new JButton("🛒 Gerenciar Itens do Pedido");
+        btnItemPedido.setBounds(xPos, yPos, buttonWidth, buttonHeight);
         btnItemPedido.addActionListener(e -> {
-            menuFrame.dispose();
-            new ItemPedidoView();
+            menuFrame.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+                new ItemPedidoView(itemPedidoService, pedidoService, produtoService);
+                menuFrame.setVisible(true);
+            });
         });
         menuFrame.add(btnItemPedido);
+        yPos += spacing;
         
+        // 5. Botão Clientes (Swing)
         JButton btnClientes = new JButton("👥 Gerenciar Clientes");
-        btnClientes.setBounds(50, 260, 300, 40);
+        btnClientes.setBounds(xPos, yPos, buttonWidth, buttonHeight);
         btnClientes.addActionListener(e -> {
-            menuFrame.dispose();
-            abrirMenuClientesConsole(); // Clientes só tem console por enquanto
+            menuFrame.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+                new ClienteView(clienteService);
+                menuFrame.setVisible(true);
+            });
         });
         menuFrame.add(btnClientes);
+        yPos += spacing;
         
-        JButton btnVoltar = new JButton("🔄 Voltar ao Menu Principal");
-        btnVoltar.setBounds(50, 320, 300, 40);
+        // 6. Botão Gerente (Console)
+        JButton btnGerente = new JButton("👨‍💼 Menu Gerente (Console)");
+        btnGerente.setBounds(xPos, yPos, buttonWidth, buttonHeight);
+        btnGerente.addActionListener(e -> {
+            menuFrame.setVisible(false);
+            new GerenteView().menuPrincipal(); 
+            menuFrame.setVisible(true);
+        });
+        menuFrame.add(btnGerente);
+        yPos += spacing;
+        
+        // 7. Botão Avaliação (Swing - se tiver service)
+        JButton btnAvaliacao = new JButton("⭐ Avaliar Pedido");
+        btnAvaliacao.setBounds(xPos, yPos, buttonWidth, buttonHeight);
+        btnAvaliacao.addActionListener(e -> {
+            if (avaliacaoService != null) {
+                menuFrame.setVisible(false);
+                SwingUtilities.invokeLater(() -> {
+                    new AvaliacaoView(avaliacaoService); 
+                    menuFrame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(menuFrame,
+                    "Serviço de avaliação não disponível!",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        menuFrame.add(btnAvaliacao);
+        
+        // Botão Voltar
+        JButton btnVoltar = new JButton("🔄 Voltar para Seleção de Interface");
+        btnVoltar.setBounds(xPos, 420, buttonWidth, buttonHeight);
         btnVoltar.addActionListener(e -> {
             menuFrame.dispose();
             escolherModoInterface();
         });
         menuFrame.add(btnVoltar);
         
-        JButton btnSair = new JButton("❌ Sair");
-        btnSair.setBounds(50, 380, 300, 40);
-        btnSair.addActionListener(e -> System.exit(0));
+        // Botão Sair
+        JButton btnSair = new JButton("❌ Sair do Sistema");
+        btnSair.setBounds(xPos, 470, buttonWidth, buttonHeight);
+        btnSair.addActionListener(e -> {
+            fecharRecursos();
+            System.exit(0);
+        });
         menuFrame.add(btnSair);
         
         menuFrame.setVisible(true);
@@ -148,12 +234,12 @@ public class Main {
         do {
             System.out.println("\n=== MENU PRINCIPAL (CONSOLE) ===");
             System.out.println("1. 🏪 Menu Atendente");
-            System.out.println("2. 📋 Menu Pedidos (Interface Gráfica)");
-            System.out.println("3. 📦 Menu Produtos (Interface Gráfica)");
-            System.out.println("4. 👥 Menu Clientes");
+            System.out.println("2. 📋 Menu Pedidos (Console)");
+            System.out.println("3. 📦 Menu Produtos (Console)");
+            System.out.println("4. 👥 Menu Clientes (Console)");
             System.out.println("5. 👨‍💼 Menu Gerente");
-            System.out.println("6. ⭐ Avaliar Pedido");
-            System.out.println("7. 🧾 Comanda Virtual");
+            System.out.println("6. ⭐ Avaliar Pedido (Console)");
+            System.out.println("7. 🧾 Comanda Virtual (Console)");
             System.out.println("8. 🔄 Voltar para Seleção de Interface");
             System.out.println("0. ❌ Sair");
             System.out.print("Escolha uma opção: ");
@@ -167,10 +253,10 @@ public class Main {
                         new AtendenteView().menuPrincipal();
                         break;
                     case 2:
-                        SwingUtilities.invokeLater(() -> new PedidoView(pedidoService, produtoService));
+                        abrirMenuPedidosConsole();
                         break;
                     case 3:
-                        SwingUtilities.invokeLater(() -> new ProdutoView());
+                        abrirMenuProdutosConsole();
                         break;
                     case 4:
                         abrirMenuClientesConsole();
@@ -178,8 +264,9 @@ public class Main {
                     case 5:
                         new GerenteView().menuPrincipal();
                         break;
-                    case 6:
-                        new AvaliacaoView().menu();
+                    case 6: 
+                        System.out.println("Acesse a opção 6 no Menu Atendente");
+                        new AtendenteView().menuPrincipal();
                         break;
                     case 7:
                         abrirComandaVirtualConsole();
@@ -189,6 +276,7 @@ public class Main {
                         return;
                     case 0:
                         System.out.println("Saindo...");
+                        fecharRecursos();
                         System.exit(0);
                         break;
                     default:
@@ -203,43 +291,295 @@ public class Main {
     }
     
     // =============================================
-    // MÉTODOS AUXILIARES
+    // MÉTODOS AUXILIARES CONSOLE
     // =============================================
     
+    private static void abrirMenuPedidosConsole() {
+        System.out.println("\n--- MENU PEDIDOS (CONSOLE) ---");
+        System.out.println("Funcionalidades disponíveis:");
+        System.out.println("1. Buscar pedido por ID");
+        System.out.println("2. Ver pedidos recentes");
+        System.out.println("3. Voltar");
+        System.out.print("Escolha: ");
+        
+        try {
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    buscarPedidoConsole();
+                    break;
+                case 2:
+                    verPedidosRecentesConsole();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+    
+    private static void buscarPedidoConsole() {
+        try {
+            System.out.print("ID do Pedido: ");
+            Long id = scanner.nextLong();
+            scanner.nextLine();
+            
+            Pedido pedido = pedidoService.buscarPedidoPorId(id);
+            
+            if (pedido != null) {
+                System.out.println("\n" + "=".repeat(50));
+                System.out.println("        DETALHES DO PEDIDO");
+                System.out.println("=".repeat(50));
+                System.out.println("🆔 ID: " + pedido.getIdPedido());
+                System.out.println("👤 Cliente ID: " + pedido.getCliente().getIdCliente());
+                System.out.println("📊 Status: " + pedido.getStatus());
+                System.out.println("💳 Pagamento: " + pedido.getTipoPagamento());
+                System.out.println("💰 Valor Total: R$ " + 
+                    (pedido.getValorTotal() != null ? String.format("%.2f", pedido.getValorTotal()) : "0.00"));
+                System.out.println("=".repeat(50));
+            } else {
+                System.out.println("❌ Pedido não encontrado!");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
+    }
+    
+    private static void verPedidosRecentesConsole() {
+        try {
+            // Usando o AtendenteController para pedidos recentes
+            com.tecdes.pedido.controller.AtendenteController controller = 
+                new com.tecdes.pedido.controller.AtendenteController();
+            var pedidos = controller.listarPedidosRecentes();
+            
+            if (pedidos.isEmpty()) {
+                System.out.println("📭 Nenhum pedido registrado.");
+                return;
+            }
+            
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("              PEDIDOS RECENTES");
+            System.out.println("=".repeat(60));
+            
+            for (Pedido pedido : pedidos) {
+                System.out.printf("🆔 #%d | 👤 Cliente: %d | 💰 R$ %.2f | 📊 %s\n",
+                    pedido.getIdPedido(),
+                    pedido.getCliente().getIdCliente(),
+                    pedido.getValorTotal() != null ? pedido.getValorTotal() : 0.0,
+                    pedido.getStatus());
+            }
+            
+            System.out.println("=".repeat(60));
+            System.out.println("📊 Total: " + pedidos.size() + " pedidos");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
+    }
+    
+    private static void abrirMenuProdutosConsole() {
+        System.out.println("\n--- MENU PRODUTOS (CONSOLE) ---");
+        System.out.println("1. Buscar produto por ID");
+        System.out.println("2. Listar todos os produtos");
+        System.out.println("3. Voltar");
+        System.out.print("Escolha: ");
+        
+        try {
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    buscarProdutoConsole();
+                    break;
+                case 2:
+                    listarProdutosConsole();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+    
+    private static void buscarProdutoConsole() {
+        try {
+            System.out.print("ID do Produto: ");
+            Long id = scanner.nextLong();
+            scanner.nextLine();
+            
+            var produto = produtoService.buscarPorId(id);
+            
+            if (produto != null) {
+                System.out.println("\n" + "=".repeat(40));
+                System.out.println("   DETALHES DO PRODUTO");
+                System.out.println("=".repeat(40));
+                System.out.println("🆔 ID: " + produto.getIdProduto());
+                System.out.println("📦 Nome: " + produto.getNome());
+                System.out.println("💰 Preço: R$ " + String.format("%.2f", produto.getPreco()));
+                if (produto.getCategoria() != null && !produto.getCategoria().isEmpty()) {
+                    System.out.println("🏷️  Categoria: " + produto.getCategoria());
+                }
+                System.out.println("=".repeat(40));
+            } else {
+                System.out.println("❌ Produto não encontrado!");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
+    }
+    
+    private static void listarProdutosConsole() {
+        try {
+            var produtos = produtoService.buscarTodos();
+            
+            if (produtos.isEmpty()) {
+                System.out.println("📭 Nenhum produto cadastrado.");
+                return;
+            }
+            
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("           LISTA DE PRODUTOS");
+            System.out.println("=".repeat(60));
+            
+            for (var produto : produtos) {
+                System.out.printf("🆔 #%d | 📦 %-20s | 💰 R$ %-8.2f\n",
+                    produto.getIdProduto(),
+                    produto.getNome().length() > 20 ? produto.getNome().substring(0, 17) + "..." : produto.getNome(),
+                    produto.getPreco());
+            }
+            
+            System.out.println("=".repeat(60));
+            System.out.println("📊 Total: " + produtos.size() + " produtos");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
+    }
+    
     private static void abrirMenuClientesConsole() {
-        System.out.println("\n--- MENU CLIENTES ---");
-        System.out.println("Abrindo interface de clientes...");
-        new ClienteView().menuPrincipal();
+        System.out.println("\n--- MENU CLIENTES (CONSOLE) ---");
+        System.out.println("1. Buscar cliente por ID");
+        System.out.println("2. Listar todos os clientes");
+        System.out.println("3. Voltar");
+        System.out.print("Escolha: ");
+        
+        try {
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    buscarClienteConsole();
+                    break;
+                case 2:
+                    listarClientesConsole();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+    
+    private static void buscarClienteConsole() {
+        try {
+            System.out.print("ID do Cliente: ");
+            Long id = scanner.nextLong();
+            scanner.nextLine();
+            
+            var cliente = clienteService.buscarPorId(id);
+            
+            if (cliente != null) {
+                System.out.println("\n" + "=".repeat(40));
+                System.out.println("   DETALHES DO CLIENTE");
+                System.out.println("=".repeat(40));
+                System.out.println("🆔 ID: " + cliente.getIdCliente());
+                System.out.println("👤 Nome: " + cliente.getNome());
+                System.out.println("📞 Telefone: " + cliente.getFone());
+                if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
+                    System.out.println("📧 Email: " + cliente.getEmail());
+                }
+                System.out.println("=".repeat(40));
+            } else {
+                System.out.println("❌ Cliente não encontrado!");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
+    }
+    
+    private static void listarClientesConsole() {
+        try {
+            var clientes = clienteService.buscarTodos();
+            
+            if (clientes.isEmpty()) {
+                System.out.println("📭 Nenhum cliente cadastrado.");
+                return;
+            }
+            
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("           LISTA DE CLIENTES");
+            System.out.println("=".repeat(60));
+            
+            for (var cliente : clientes) {
+                System.out.printf("🆔 #%d | 👤 %-20s | 📞 %-15s\n",
+                    cliente.getIdCliente(),
+                    cliente.getNome().length() > 20 ? cliente.getNome().substring(0, 17) + "..." : cliente.getNome(),
+                    cliente.getFone() != null ? cliente.getFone() : "-");
+            }
+            
+            System.out.println("=".repeat(60));
+            System.out.println("📊 Total: " + clientes.size() + " clientes");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erro: " + e.getMessage());
+        }
     }
     
     private static void abrirComandaVirtualConsole() {
-    System.out.println("\n--- COMANDA VIRTUAL ---");
-    try {
-        System.out.print("ID do Pedido: ");
-        Long idPedido = scanner.nextLong();
-        scanner.nextLine();
-        
-        // ✅ CORREÇÃO: Agora usando o idPedido para buscar o pedido
+        System.out.println("\n--- COMANDA VIRTUAL ---");
         try {
-            Pedido pedido = pedidoService.buscarPedidoPorId(idPedido);
-            new ComandaVirtualView().exibirComanda(pedido);
+            System.out.print("ID do Pedido: ");
+            Long idPedido = scanner.nextLong();
+            scanner.nextLine();
+            
+            try {
+                Pedido pedido = pedidoService.buscarPedidoPorId(idPedido);
+                // ✅ USANDO A CLASSE CORRETA (não é View, é só método de exibição)
+                new ComandaVirtualView().exibirComanda(pedido);
+            } catch (Exception e) {
+                System.err.println("❌ Erro ao buscar pedido: " + e.getMessage());
+                System.out.println("Verifique se o ID do pedido existe.");
+            }
+            
+        } catch (java.util.InputMismatchException e) {
+            System.err.println("❌ Erro: ID deve ser um número válido.");
+            scanner.nextLine();
         } catch (Exception e) {
-            System.err.println("❌ Erro ao buscar pedido: " + e.getMessage());
-            System.out.println("Verifique se o ID do pedido existe.");
+            System.err.println("❌ Erro: " + e.getMessage());
         }
-        
-    } catch (java.util.InputMismatchException e) {
-        System.err.println("❌ Erro: ID deve ser um número válido.");
-        scanner.nextLine();
-    } catch (Exception e) {
-        System.err.println("❌ Erro: " + e.getMessage());
     }
-}
     
-    // Método para fechar recursos2
+    // Método para fechar recursos
     public static void fecharRecursos() {
         if (scanner != null) {
             scanner.close();
         }
+        System.out.println("Recursos fechados com sucesso!");
     }
 }

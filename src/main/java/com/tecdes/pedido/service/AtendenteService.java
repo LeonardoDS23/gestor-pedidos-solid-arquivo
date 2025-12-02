@@ -44,4 +44,45 @@ public class AtendenteService {
         buscarAtendentePorId(id);
         usuarioRepository.deleteById(id);
     }
+    
+    // ✅ NOVO MÉTODO ADICIONADO: Atualizar atendente
+    public Atendente atualizarAtendente(Atendente atendenteAtualizado) {
+        try {
+            // Verificar se o atendente existe
+            Atendente atendenteExistente = buscarAtendentePorId(atendenteAtualizado.getIdUsuario());
+            
+            // Atualizar os campos necessários
+            if (atendenteAtualizado.getLogin() != null && !atendenteAtualizado.getLogin().isEmpty()) {
+                // Verificar se o novo login não está em uso por outro usuário
+                usuarioRepository.findByLogin(atendenteAtualizado.getLogin())
+                    .ifPresent(outroUsuario -> {
+                        if (!outroUsuario.getIdUsuario().equals(atendenteAtualizado.getIdUsuario())) {
+                            throw new RuntimeException("Login já está em uso por outro usuário.");
+                        }
+                    });
+                atendenteExistente.setLogin(atendenteAtualizado.getLogin());
+            }
+            
+            if (atendenteAtualizado.getSenha() != null && !atendenteAtualizado.getSenha().isEmpty()) {
+                atendenteExistente.setSenha(atendenteAtualizado.getSenha());
+            }
+            
+            // Atualizar outros campos específicos do Atendente
+            if (atendenteAtualizado instanceof Atendente) {
+                Atendente atendenteNovo = (Atendente) atendenteAtualizado;
+                if (atendenteNovo.getIdFuncionario() != null) {
+                    ((Atendente) atendenteExistente).setIdFuncionario(atendenteNovo.getIdFuncionario());
+                }
+                if (atendenteNovo.getDataCadastro() != null) {
+                    ((Atendente) atendenteExistente).setDataCadastro(atendenteNovo.getDataCadastro());
+                }
+            }
+            
+            // Salvar as alterações
+            return (Atendente) usuarioRepository.save(atendenteExistente);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar atendente: " + e.getMessage(), e);
+        }
+    }
 }

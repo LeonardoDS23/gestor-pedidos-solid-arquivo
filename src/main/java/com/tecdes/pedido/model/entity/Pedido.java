@@ -11,9 +11,11 @@ public class Pedido {
     private LocalDateTime dataHora;
     private String status;
     private List<ItemPedido> produtos; 
-    private double valorTotal;
+    private Double valorTotal;
     private String tipoPagamento;
-    private Cliente cliente; // <-- NOVO ATRIBUTO: Relacionamento com Cliente
+    private Cliente cliente; 
+    private String observacoes; 
+
 
     // Construtor Padrão 
     public Pedido() {
@@ -81,11 +83,11 @@ public class Pedido {
         this.produtos = produtos;
     }
 
-    public double getValorTotal() {
+    public Double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(double valorTotal) {
+    public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -97,12 +99,20 @@ public class Pedido {
         this.tipoPagamento = tipoPagamento;
     }
     
-    // NOVO: Getter e Setter para Cliente
     public Cliente getCliente() {
         return cliente;
     }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    
+    public String getObservacoes() {
+        return observacoes;
+    }
+    
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 }

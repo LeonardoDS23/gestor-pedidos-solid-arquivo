@@ -14,8 +14,8 @@ public class ClienteController {
         this.service = new ClienteService(new ClienteRepositoryImpl()); 
     }
 
-    public void salvar(String nome, String fone) {
-        Cliente novoCliente = new Cliente(nome, fone);
+    public void salvar(String nome, String fone, String email) {
+        Cliente novoCliente = new Cliente(nome, fone, email);
         service.cadastrarCliente(novoCliente);
     }
 
@@ -27,8 +27,8 @@ public class ClienteController {
         return service.buscarClientePorId(idCliente);
     }
 
-    public void update(Long idCliente, String nome, String fone){
-        Cliente dadosNovos = new Cliente(nome, fone);
+    public void update(Long idCliente, String nome, String fone,String email){
+        Cliente dadosNovos = new Cliente(nome, fone, email);
         service.atualizarCliente(idCliente, dadosNovos);
     }
 

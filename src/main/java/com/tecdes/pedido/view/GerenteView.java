@@ -85,7 +85,7 @@ public class GerenteView {
             controller.redefinirSenhaDeUsuario(id, novaSenha);
             System.out.println("Senha redefinida com sucesso para o usuário ID " + id + ".");
             
-        } catch (java.util.InputMismatchException e) { // Captura o erro específico de tipo
+        } catch (java.util.InputMismatchException e) {
             System.err.println("ERRO: ID deve ser um número.");
             scanner.nextLine();
         } catch (RuntimeException e) {
@@ -103,7 +103,7 @@ public class GerenteView {
             controller.excluirUsuario(id);
             System.out.println("Usuário ID " + id + " excluído com sucesso.");
             
-        } catch (java.util.InputMismatchException e) { // Captura o erro específico de tipo
+        } catch (java.util.InputMismatchException e) {
             System.err.println("ERRO: ID deve ser um número.");
             scanner.nextLine();
         } catch (RuntimeException e) {
