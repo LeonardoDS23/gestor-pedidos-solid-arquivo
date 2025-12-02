@@ -1,16 +1,21 @@
 package com.tecdes.pedido.repository;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
 
 import com.tecdes.pedido.model.DAO.ItemPedidoDAO;
 import com.tecdes.pedido.model.entity.ItemPedido;
 import com.tecdes.pedido.config.ConnectionFactory;
 
+
 public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
 
+
     private final ItemPedidoDAO itemPedidoDAO;
+
 
     public ItemPedidoRepositoryImpl() {
         try {
@@ -20,7 +25,8 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
             throw new RuntimeException("Erro ao conectar ao banco", e);
         }
     }
-    
+   
+
 
     @Override
     public void save(ItemPedido item) {
@@ -30,6 +36,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public ItemPedido findById(Long id) {
@@ -41,6 +48,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
         }
     }
 
+
     @Override
     public List<ItemPedido> findAll() {
         try {
@@ -51,6 +59,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
         }
     }
 
+
     @Override
     public void update(ItemPedido item) {
         try {
@@ -59,6 +68,7 @@ public class ItemPedidoRepositoryImpl implements ItemPedidoRepository {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void delete(Long id) {

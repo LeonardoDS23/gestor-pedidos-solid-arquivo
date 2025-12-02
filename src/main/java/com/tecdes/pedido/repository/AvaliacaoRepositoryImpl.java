@@ -1,15 +1,19 @@
 package com.tecdes.pedido.repository;
 
+
 import com.tecdes.pedido.model.entity.Avaliacao;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 public class AvaliacaoRepositoryImpl implements AvaliacaoRepository {
 
+
     private final Map<Long, Avaliacao> database = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0); 
+    private final AtomicLong idGenerator = new AtomicLong(0);
+
 
     @Override
     public Avaliacao save(Avaliacao avaliacao) {
@@ -21,11 +25,12 @@ public class AvaliacaoRepositoryImpl implements AvaliacaoRepository {
         return avaliacao;
     }
 
+
     @Override
     public Optional<Avaliacao> findById(Long id) {
         return Optional.ofNullable(database.get(id));
     }
-    
+   
     @Override
     public Optional<Avaliacao> findByPedidoId(Long idPedido) {
         return database.values().stream()

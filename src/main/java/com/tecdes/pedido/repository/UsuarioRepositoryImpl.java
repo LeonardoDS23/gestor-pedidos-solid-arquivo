@@ -1,5 +1,6 @@
 package com.tecdes.pedido.repository;
 
+
 import com.tecdes.pedido.model.entity.Usuario;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +10,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+
 public class UsuarioRepositoryImpl implements UsuarioRepository {
 
+
     private final Map<Long, Usuario> database = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0); 
+    private final AtomicLong idGenerator = new AtomicLong(0);
+
 
     @Override
     public Usuario save(Usuario usuario) {
@@ -24,10 +28,12 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
         return usuario;
     }
 
+
     @Override
     public Optional<Usuario> findById(Long id) {
         return Optional.ofNullable(database.get(id));
     }
+
 
     @Override
     public Optional<Usuario> findByLogin(String login) {
@@ -36,11 +42,12 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                 .findFirst();
     }
 
+
     @Override
     public List<Usuario> findAll() {
         return new ArrayList<>(database.values());
     }
-    
+   
     @Override
     public List<Usuario> findAllByType(Class<? extends Usuario> type) {
         return database.values().stream()
@@ -48,14 +55,17 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public void deleteById(Long id) {
         database.remove(id);
         System.out.println("[DB] Usuário deletado: ID " + id);
     }
 
+
     @Override
     public boolean existsById(Long id) {
         return database.containsKey(id);
     }
 }
+
